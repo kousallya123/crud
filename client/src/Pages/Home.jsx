@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { IoMdLogOut } from "react-icons/io";
 import axiosInstance from '../services/axiosInstance'
 import { MdDeleteForever, MdEdit } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [data, setData] = useState(null);
@@ -18,7 +19,7 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
-
+const navigate=useNavigate()
   const pageSize = 5; // Number of rows per page
 
   useEffect(() => {
@@ -139,7 +140,7 @@ const Home = () => {
   
   const handleLogout=()=>{
     localStorage.removeItem('accessToken')
-    navigate('/login')
+    navigate('/')
   }
 
   return (
@@ -178,8 +179,9 @@ const Home = () => {
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
           </select>
+          <IoMdLogOut size={20} style={{cursor:"pointer"}} onClick={handleLogout}/>
         </div>
-        <IoMdLogOut size={20} style={{cursor:"pointer"}} onClick={handleLogout}/>
+       
       </div>
 
 

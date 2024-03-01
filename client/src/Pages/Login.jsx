@@ -43,6 +43,13 @@ function Login() {
     setSubmitting(false);
   };
 
+  const user = localStorage.getItem('accessToken');
+  useEffect(() => {
+    if (user) {
+      navigate('/home');
+    }
+  }, []);
+
   const formik = useFormik({
     initialValues: { email: '', password: '' },
     validationSchema: LoginSchema,

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "tippy.js": "^6.3.7"
+  }
+}
