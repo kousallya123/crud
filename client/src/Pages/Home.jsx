@@ -133,7 +133,7 @@ const Home = () => {
 
   const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) {
-    window.location.href = '/login';
+    window.location.href = '/';
     return; 
   }
   

@@ -25,7 +25,7 @@ function Login() {
       const { accessToken } = response.data;
       // Set token in local storage
       localStorage.setItem('accessToken', accessToken);
-      navigate('/')
+      navigate('/home')
     }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -42,13 +42,6 @@ function Login() {
 
     setSubmitting(false);
   };
-
-  const user = localStorage.getItem('user');
-  useEffect(() => {
-    if (user) {
-      navigate('/');
-    }
-  }, []);
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
