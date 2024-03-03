@@ -37,7 +37,7 @@ const navigate=useNavigate()
         });
         console.log(response.data);
         setData(response.data.users);
-        setTotalPages(Math.ceil(response.data?.users?.length / pageSize));
+        setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Error fetching data. Please try again.');
@@ -228,8 +228,8 @@ const navigate=useNavigate()
             <button
               className="bg-red-500 text-white p-2 border rounded ml-2 disabled:cursor-not-allowed"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
+              // disabled={currentPage === totalPages}
+            >{console.log(currentPage,totalPages,'l')}
               Next
             </button>
           </div>

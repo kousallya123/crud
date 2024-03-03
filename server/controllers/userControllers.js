@@ -71,31 +71,59 @@ const getUsers = async (req, res) => {
   try {
     const { search, filter, sortBy, sortOrder, page, pageSize } = req.query;
 
-    const query = {};
-    if (search) {
-      query.email = { $regex: new RegExp(search), $options: 'i' };
-    }
+    const query = buildQuery(search, filter);
+    const sortOptions = buildSortOptions(sortBy, sortOrder);
 
-    // Adding filter based on the first name
-    if (filter) {
-      query.firstName = { $regex: new RegExp(filter), $options: 'i' };
-    }
+    const totalUsersCount = await Users.countDocuments(query);
+    const totalPages = calculateTotalPages(totalUsersCount, pageSize);
 
-    const sortOptions = {};
-    if (sortBy) {
-      sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
-    }
+    const users = await fetchUsers(query, sortOptions, page, pageSize);
 
-    const users = await Users.find(query)
-      .sort(sortOptions)
-      .skip((page - 1) * pageSize)
-      .limit(Number(pageSize));
-
-    res.status(200).json({ message: 'User list retrieved successfully', users });
+    res.status(200).json({
+      message: 'User list retrieved successfully',
+      users,
+      totalPages,
+      currentPage: Number(page),
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
+};
+
+const buildQuery = (search, filter) => {
+  const query = {};
+
+  if (search) {
+    query.email = { $regex: new RegExp(search), $options: 'i' };
+  }
+
+  if (filter) {
+    query.firstName = { $regex: new RegExp(filter), $options: 'i' };
+  }
+
+  return query;
+};
+
+const buildSortOptions = (sortBy, sortOrder) => {
+  const sortOptions = {};
+
+  if (sortBy) {
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+  }
+
+  return sortOptions;
+};
+
+const calculateTotalPages = (totalUsersCount, pageSize) => {
+  return Math.ceil(totalUsersCount / pageSize);
+};
+
+const fetchUsers = async (query, sortOptions, page, pageSize) => {
+  return await Users.find(query)
+    .sort(sortOptions)
+    .skip((page - 1) * pageSize)
+    .limit(Number(pageSize));
 };
 
 
